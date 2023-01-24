@@ -1,4 +1,7 @@
+import GUI from "lil-gui";
 import * as THREE from "three";
+import { Pearl } from "./Pearl";
+import { config } from "../config";
 
 export class App {
   constructor() {
@@ -9,30 +12,75 @@ export class App {
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
     });
-    this.renderer.setClearColor("#031E41");
-    this.setRendererSize();
+    this.renderer.setClearColor(config.MAIN_COLOR);
+    this.renderer.setSize(this.width, this.height);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.camera = new THREE.PerspectiveCamera(
       70,
       this.width / this.height,
       0.1,
       1000
     );
-    this.camera.position.x = 30;
+    this.camera.position.set(-0.5, 0, 200);
 
+    if (config.DEBOG_MODE) this.setDebug();
+
+    this.pearlGeometry = new THREE.SphereGeometry(4, 10, 10);
+    this.pearlShader = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    this.setPearls();
+    this.setEvents();
     this.update();
   }
 
-  setRendererSize = () => {
+  setPearls = () => {
+    if (this.pearls) {
+      this.scene.remove(this.pearls);
+      this.pearls.children.forEach((child) => {
+        child.remove();
+        this.pearls = null;
+      });
+    }
+    this.pearls = new THREE.Group();
+
+    for (let i = 0; i < config.PEARL_NUMBERS; i++) {
+      this.pearls.add(new Pearl(this.pearlGeometry, this.pearlShader).instance);
+    }
+
+    this.scene.add(this.pearls);
+  };
+
+  handleResize = () => {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
+    this.camera.aspect = this.width / this.height;
+    this.camera.updateProjectionMatrix();
     this.renderer.setSize(this.width, this.height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
   };
 
   setEvents = () => {
-    window.addEventListener("resize", this.setRendererSize);
+    window.addEventListener("resize", this.handleResize);
   };
+
+  setDebug() {
+    this.gui = new GUI();
+    this.gui
+      .add(config, "PEARL_NUMBERS", 0, 10000, 5)
+      .name("nb de perles")
+      .onChange(this.setPearls);
+    this.gui
+      .add(config, "PEARL_RADIUS", 0, 2000, 10)
+      .name("radius des perles")
+      .onChange(this.setPearls);
+    this.gui
+      .add(config, "ROTATION_SPEED", 0, 0.01, 0.00005)
+      .name("vitesse rotation");
+  }
 
   update = () => {
     requestAnimationFrame(this.update);
+    this.pearls.rotateY(config.ROTATION_SPEED);
     this.renderer.render(this.scene, this.camera);
   };
 }
