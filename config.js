@@ -4,5 +4,5 @@ export const config = {
 
   PEARL_NUMBERS: 150,
   PEARL_RADIUS: 350,
-  ROTATION_SPEED: 0.0001,
+  ROTATION_SPEED: 0.00001,
 };

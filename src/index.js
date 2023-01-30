@@ -32,6 +32,7 @@ export class App {
       vertexShader: pearlVertex,
       fragmentShader: pearlFragment,
     });
+    this.scrollY = 0;
     this.setPearls();
     this.setEvents();
     this.update();
@@ -64,13 +65,14 @@ export class App {
     this.renderer.setPixelRatio(window.devicePixelRatio);
   };
 
-  handleScroll = (e) => {
-    console.log(e);
-  };
+  handleScroll(e) {
+    this.scrollY = window.scrollY;
+    console.log(this.scrollY);
+  }
 
   setEvents = () => {
-    window.addEventListener("resize", this.handleResize);
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("resize", () => this.handleResize());
+    window.addEventListener("scroll", () => this.handleScroll());
   };
 
   setDebug() {
@@ -84,13 +86,13 @@ export class App {
       .name("radius des perles")
       .onChange(this.setPearls);
     this.gui
-      .add(config, "ROTATION_SPEED", 0, 0.01, 0.00005)
+      .add(config, "ROTATION_SPEED", 0, 0.00001, 0.000005)
       .name("vitesse rotation");
   }
 
   update = () => {
     requestAnimationFrame(this.update);
-    this.pearls.rotateY(config.ROTATION_SPEED);
+    this.pearls.rotateY(config.ROTATION_SPEED * this.scrollY);
     this.renderer.render(this.scene, this.camera);
   };
 }
