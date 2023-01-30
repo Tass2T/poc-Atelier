@@ -67,7 +67,6 @@ export class App {
 
   handleScroll(e) {
     this.scrollY = window.scrollY;
-    console.log(this.scrollY);
   }
 
   setEvents = () => {
