@@ -28,6 +28,7 @@ body {
 	overflow-x: hidden;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
+	height: 2800px;
 }
 ::-webkit-scrollbar {
 	display: none; /* for Chrome, Safari, and Opera */
@@ -47,4 +48,9 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+canvas {
+	position: sticky;
+	top: 0;
 }
