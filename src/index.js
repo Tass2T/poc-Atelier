@@ -2,6 +2,8 @@ import GUI from "lil-gui";
 import * as THREE from "three";
 import { Pearl } from "./Pearl";
 import { config } from "../config";
+import pearlFragment from "./shaders/pearlFragment.glsl";
+import pearlVertex from "./shaders/pearlVertex.glsl";
 
 export class App {
   constructor() {
@@ -26,7 +28,10 @@ export class App {
     if (config.DEBOG_MODE) this.setDebug();
 
     this.pearlGeometry = new THREE.SphereGeometry(4, 10, 10);
-    this.pearlShader = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    this.pearlShader = new THREE.ShaderMaterial({
+      vertexShader: pearlVertex,
+      fragmentShader: pearlFragment,
+    });
     this.setPearls();
     this.setEvents();
     this.update();
@@ -59,8 +64,13 @@ export class App {
     this.renderer.setPixelRatio(window.devicePixelRatio);
   };
 
+  handleScroll = (e) => {
+    console.log(e);
+  };
+
   setEvents = () => {
     window.addEventListener("resize", this.handleResize);
+    window.addEventListener("scroll", this.handleScroll);
   };
 
   setDebug() {
