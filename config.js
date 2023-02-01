@@ -8,10 +8,10 @@ export const config = {
 
   ATELIER_COLORS: [
     // dark blue
-    [0, 103, 255],
+    "0, 103, 255",
     // green
-    [5, 235, 123],
+    "5, 235, 123",
     // light blue
-    [0, 103, 255],
+    "0, 103, 255",
   ],
 };

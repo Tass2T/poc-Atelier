@@ -28,10 +28,7 @@ export class App {
     if (config.DEBOG_MODE) this.setDebug();
 
     this.pearlGeometry = new THREE.SphereGeometry(4, 10, 10);
-    this.pearlShader = new THREE.ShaderMaterial({
-      vertexShader: pearlVertex,
-      fragmentShader: pearlFragment,
-    });
+    this.pearlShader = new THREE.MeshBasicMaterial();
     this.scrollY = 0;
     this.setPearls();
     this.setEvents();
@@ -41,16 +38,26 @@ export class App {
   setPearls = () => {
     if (this.pearls) {
       this.scene.remove(this.pearls);
-      this.pearls.children.forEach((child) => {
-        child.remove();
-        this.pearls = null;
-      });
     }
-    this.pearls = new THREE.Group();
+    this.pearls = new THREE.InstancedMesh(
+      this.pearlGeometry,
+      this.pearlShader,
+      config.PEARL_NUMBERS
+    );
+    this.pearls.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 
-    for (let i = 0; i < config.PEARL_NUMBERS; i++) {
-      this.pearls.add(new Pearl(this.pearlGeometry, this.pearlShader).instance);
+    for (let i = 0; i < this.pearls.count; i++) {
+      const color = new THREE.Color(
+        `rgb(${
+          config.ATELIER_COLORS[
+            Math.floor(Math.random() * config.ATELIER_COLORS.length)
+          ]
+        })`
+      );
+      this.pearls.setColorAt(i, color);
     }
+
+    this.pearls.instanceColor.needsUpdate = true;
 
     this.scene.add(this.pearls);
   };
@@ -91,7 +98,7 @@ export class App {
 
   update = () => {
     requestAnimationFrame(this.update);
-    this.pearls.rotateY(config.ROTATION_SPEED * this.scrollY);
+    this.pearls.instanceMatrix.needsUpdate = true;
     this.renderer.render(this.scene, this.camera);
   };
 }
