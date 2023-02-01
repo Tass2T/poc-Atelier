@@ -28,6 +28,7 @@ export class App {
     this.pearlShader = new THREE.MeshBasicMaterial();
     this.scrollY = 0;
     this.setPearls();
+    this.axis = new THREE.Vector3(0.2, 1, 0);
     this.setEvents();
     this.update();
   }
@@ -77,8 +78,9 @@ export class App {
     this.renderer.setPixelRatio(window.devicePixelRatio);
   };
 
-  handleScroll(e) {
+  handleScroll() {
     this.scrollY = window.scrollY;
+    console.log(this.scrollY);
   }
 
   setEvents = () => {
@@ -97,13 +99,21 @@ export class App {
       .name("radius des perles")
       .onChange(this.setPearls);
     this.gui
-      .add(config, "ROTATION_SPEED", 0, 0.00001, 0.000005)
+      .add(config, "ROTATION_SPEED", 0.001, 0.5, 0.005)
       .name("vitesse rotation");
+  }
+
+  updatePearlPositions() {
+    this.pearls.rotateOnAxis(
+      this.axis,
+      (this.scrollY + 0.0001) * config.ROTATION_SPEED
+    );
+    this.pearls.instanceMatrix.needsUpdate = true;
   }
 
   update = () => {
     requestAnimationFrame(this.update);
-    this.pearls.instanceMatrix.needsUpdate = true;
+    this.updatePearlPositions();
     this.renderer.render(this.scene, this.camera);
   };
 }
