@@ -1,9 +1,6 @@
 import GUI from "lil-gui";
 import * as THREE from "three";
-import { Pearl } from "./Pearl";
 import { config } from "../config";
-import pearlFragment from "./shaders/pearlFragment.glsl";
-import pearlVertex from "./shaders/pearlVertex.glsl";
 
 export class App {
   constructor() {
@@ -40,6 +37,7 @@ export class App {
       this.scene.remove(this.pearls);
       this.pearls = null;
     }
+
     this.pearls = new THREE.InstancedMesh(
       this.pearlGeometry,
       this.pearlShader,
