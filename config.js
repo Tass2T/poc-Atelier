@@ -7,8 +7,6 @@ export const config = {
   ROTATION_SPEED: 0.00001,
 
   ATELIER_COLORS: [
-    // dark blue
-    "0, 103, 255",
     // green
     "5, 235, 123",
     // light blue

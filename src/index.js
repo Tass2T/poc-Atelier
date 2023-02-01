@@ -38,6 +38,7 @@ export class App {
   setPearls = () => {
     if (this.pearls) {
       this.scene.remove(this.pearls);
+      this.pearls = null;
     }
     this.pearls = new THREE.InstancedMesh(
       this.pearlGeometry,
@@ -45,7 +46,6 @@ export class App {
       config.PEARL_NUMBERS
     );
     this.pearls.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-
     for (let i = 0; i < this.pearls.count; i++) {
       const color = new THREE.Color(
         `rgb(${
@@ -54,6 +54,13 @@ export class App {
           ]
         })`
       );
+      const position = new THREE.Matrix4();
+      position.setPosition(
+        (Math.random() - 0.5) * config.PEARL_RADIUS,
+        (Math.random() - 0.5) * config.PEARL_RADIUS,
+        (Math.random() - 0.5) * config.PEARL_RADIUS
+      );
+      this.pearls.setMatrixAt(i, position);
       this.pearls.setColorAt(i, color);
     }
 
