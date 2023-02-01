@@ -20,7 +20,7 @@ export class App {
       0.1,
       1000
     );
-    this.camera.position.set(-0.5, 0, 200);
+    this.camera.position.set(-0.5, 0, 150);
 
     if (config.DEBOG_MODE) this.setDebug();
 
@@ -53,13 +53,15 @@ export class App {
           ]
         })`
       );
-      const position = new THREE.Matrix4();
-      position.setPosition(
+      const dummy = new THREE.Object3D();
+      dummy.position.set(
         (Math.random() - 0.5) * config.PEARL_RADIUS,
         (Math.random() - 0.5) * config.PEARL_RADIUS,
         (Math.random() - 0.5) * config.PEARL_RADIUS
       );
-      this.pearls.setMatrixAt(i, position);
+      dummy.scale.setScalar(Math.random() * 1.5);
+      dummy.updateMatrix();
+      this.pearls.setMatrixAt(i, dummy.matrix);
       this.pearls.setColorAt(i, color);
     }
 
@@ -80,7 +82,6 @@ export class App {
 
   handleScroll() {
     this.scrollY = window.scrollY;
-    console.log(this.scrollY);
   }
 
   setEvents = () => {
@@ -106,7 +107,7 @@ export class App {
   updatePearlPositions() {
     this.pearls.rotateOnAxis(
       this.axis,
-      (this.scrollY + 0.0001) * config.ROTATION_SPEED
+      (this.scrollY + 20) * config.ROTATION_SPEED
     );
     this.pearls.instanceMatrix.needsUpdate = true;
   }
