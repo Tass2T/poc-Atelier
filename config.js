@@ -1,5 +1,5 @@
 export const config = {
-  DEBOG_MODE: true,
+  DEBOG_MODE: false,
   MAIN_COLOR: "#031E41",
 
   PEARL_NUMBERS: 200,
